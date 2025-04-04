@@ -36,7 +36,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
 
   return (
     <MapContainer 
-      center={mapCenter as L.LatLngExpression} 
+      center={mapCenter} 
       zoom={mapZoom} 
       scrollWheelZoom={true} 
       className="h-full w-full rounded-lg"
@@ -46,20 +46,21 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      <LayersControl position="topright" as={LayersControl}>
+      <LayersControl position="topright">
         {/* Recent Earthquakes Layer */}
         <LayersControl.Overlay checked name="Recent Earthquakes">
           <LayerGroup>
             {earthquakes.map(earthquake => (
               <CircleMarker 
                 key={earthquake.id}
-                center={[earthquake.coordinates[1], earthquake.coordinates[0]] as L.LatLngExpression}
+                center={[earthquake.coordinates[1], earthquake.coordinates[0]]}
                 pathOptions={{ 
                   fillColor: getMagnitudeColor(earthquake.magnitude),
                   color: getMagnitudeColor(earthquake.magnitude),
                   fillOpacity: 0.7,
                   weight: 1
                 }}
+                radius={getMarkerSize(earthquake.magnitude)}
               >
                 <Popup>
                   <div className="text-sm">
@@ -91,13 +92,14 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                 return (
                   <CircleMarker 
                     key={zone.id}
-                    center={[zone.coordinates[1], zone.coordinates[0]] as L.LatLngExpression}
+                    center={[zone.coordinates[1], zone.coordinates[0]]}
                     pathOptions={{ 
                       fillColor: color,
                       color: color,
                       fillOpacity: 0.2,
                       weight: 1
                     }}
+                    radius={30}
                   >
                     <Popup>
                       <div className="text-sm">
@@ -122,7 +124,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                 return (
                   <CircleMarker 
                     key={idx}
-                    center={[prediction.coordinates[1], prediction.coordinates[0]] as L.LatLngExpression}
+                    center={[prediction.coordinates[1], prediction.coordinates[0]]}
                     pathOptions={{ 
                       fillColor: color,
                       color: color,
@@ -130,6 +132,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                       weight: 2,
                       dashArray: "5, 5"
                     }}
+                    radius={25}
                   >
                     <Popup>
                       <div className="text-sm">
