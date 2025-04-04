@@ -15,7 +15,7 @@ import {
   fetchRiskZones
 } from '@/services/earthquakeService';
 import { Card, CardContent } from '@/components/ui/card';
-import { InfoCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
@@ -162,7 +162,7 @@ const Dashboard = () => {
           </div>
           
           <div className="mt-4 text-xs text-muted-foreground flex items-center">
-            <InfoCircle className="h-3 w-3 mr-1" />
+            <Info className="h-3 w-3 mr-1" />
             <span>
               Predictions are based on probabilistic models and should not be interpreted as definitive forecasts. 
               QuakeAware uses AI and historical seismic data to estimate risk levels.
