@@ -14,17 +14,22 @@ import { useToast } from '@/hooks/use-toast';
 
 interface HeaderProps {
   toggleSidebar: () => void;
+  onNotificationClick?: (id: string) => void;
 }
 
-const Header = ({ toggleSidebar }: HeaderProps) => {
+const Header = ({ toggleSidebar, onNotificationClick }: HeaderProps) => {
   const [notificationCount] = useState(3);
   const { toast } = useToast();
 
-  const handleNotificationClick = (title: string) => {
+  const handleNotificationClick = (title: string, id: string = "default") => {
     toast({
       title: `Notification: ${title}`,
       description: "You've viewed this notification.",
     });
+    
+    if (onNotificationClick) {
+      onNotificationClick(id);
+    }
   };
 
   return (
@@ -60,13 +65,13 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
           <DropdownMenuContent align="end" className="w-72">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleNotificationClick("New earthquake detected")}>
+            <DropdownMenuItem onClick={() => handleNotificationClick("New earthquake detected", "eq1")}>
               <div className="flex flex-col">
                 <span className="font-medium">New earthquake detected</span>
                 <span className="text-xs text-muted-foreground">Magnitude 4.5 near San Francisco</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNotificationClick("Prediction updated")}>
+            <DropdownMenuItem onClick={() => handleNotificationClick("Prediction updated", "pred1")}>
               <div className="flex flex-col">
                 <span className="font-medium">Prediction updated</span>
                 <span className="text-xs text-muted-foreground">Risk level increased in Pacific region</span>

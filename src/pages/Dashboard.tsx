@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showPanels, setShowPanels] = useState(false);
+  const [showPanels, setShowPanels] = useState(true); // Show panels by default
   const [recentEarthquakes, setRecentEarthquakes] = useState<Earthquake[]>([]);
   const [predictions, setPredictions] = useState<EarthquakePrediction[]>([]);
   const [historicalEarthquakes, setHistoricalEarthquakes] = useState<HistoricalEarthquake[]>([]);
@@ -32,6 +32,8 @@ const Dashboard = () => {
   ]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const [activeEarthquakeId, setActiveEarthquakeId] = useState<string | null>(null);
+  const [activePredictionId, setActivePredictionId] = useState<string | null>(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const togglePanels = () => setShowPanels(!showPanels);
@@ -42,6 +44,24 @@ const Dashboard = () => {
         ? prev.filter(l => l !== layer)
         : [...prev, layer]
     );
+  };
+
+  const handleEarthquakeNotification = (earthquakeId: string) => {
+    setActiveEarthquakeId(earthquakeId);
+    setShowPanels(true); // Ensure panels are visible when viewing earthquake details
+    toast({
+      title: "Navigating to earthquake details",
+      description: "Showing information about the selected earthquake.",
+    });
+  };
+
+  const handlePredictionNotification = (predictionId: string) => {
+    setActivePredictionId(predictionId);
+    setShowPanels(true); // Ensure panels are visible when viewing prediction details
+    toast({
+      title: "Navigating to prediction details",
+      description: "Showing information about the selected prediction.",
+    });
   };
 
   useEffect(() => {
@@ -90,9 +110,21 @@ const Dashboard = () => {
           
           if (newEarthquakes.length > 0) {
             setRecentEarthquakes(data);
+            
+            // Notify about new earthquake with action to view it
+            const latestEarthquake = newEarthquakes[0];
             toast({
               title: "New Earthquake Detected",
-              description: `${newEarthquakes.length} new earthquake(s) have been detected.`,
+              description: `${latestEarthquake.place} - Magnitude ${latestEarthquake.magnitude}`,
+              action: (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleEarthquakeNotification(latestEarthquake.id)}
+                >
+                  View Details
+                </Button>
+              ),
             });
           }
         }
@@ -113,14 +145,17 @@ const Dashboard = () => {
         />
       )}
       
-      <Header toggleSidebar={toggleSidebar} />
+      <Header 
+        toggleSidebar={toggleSidebar} 
+        onNotificationClick={handleEarthquakeNotification}
+      />
       
       <div className="flex flex-1 overflow-hidden">
         {isSidebarOpen && (
           <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         )}
         
-        <main className="flex-1 overflow-auto p-4">
+        <main className={`flex-1 overflow-auto p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Predictive Risk Dashboard</h2>
             <Button 
@@ -150,6 +185,8 @@ const Dashboard = () => {
                 <RecentEarthquakesPanel 
                   recentEarthquakes={recentEarthquakes}
                   historicalEarthquakes={historicalEarthquakes}
+                  activeEarthquakeId={activeEarthquakeId}
+                  setActiveEarthquakeId={setActiveEarthquakeId}
                 />
               </div>
             )}
@@ -171,6 +208,8 @@ const Dashboard = () => {
                       predictions={predictions}
                       riskZones={riskZones}
                       enabledLayers={enabledLayers}
+                      activeEarthquakeId={activeEarthquakeId}
+                      activePredictionId={activePredictionId}
                     />
                   )}
                 </CardContent>
@@ -185,7 +224,11 @@ const Dashboard = () => {
             {/* Right Column - Predictions */}
             {showPanels && (
               <div className="h-full">
-                <PredictivePanel predictions={predictions} />
+                <PredictivePanel 
+                  predictions={predictions} 
+                  activePredictionId={activePredictionId}
+                  setActivePredictionId={setActivePredictionId}
+                />
               </div>
             )}
           </div>

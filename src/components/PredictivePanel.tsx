@@ -7,10 +7,22 @@ import { Progress } from '@/components/ui/progress';
 
 interface PredictivePanelProps {
   predictions: EarthquakePrediction[];
+  activePredictionId?: string | null;
+  setActivePredictionId?: (id: string | null) => void;
 }
 
-const PredictivePanel = ({ predictions }: PredictivePanelProps) => {
+const PredictivePanel = ({ 
+  predictions,
+  activePredictionId,
+  setActivePredictionId
+}: PredictivePanelProps) => {
   const sortedPredictions = [...predictions].sort((a, b) => b.probability - a.probability);
+
+  const handlePredictionClick = (id: string) => {
+    if (setActivePredictionId) {
+      setActivePredictionId(id);
+    }
+  };
 
   return (
     <Card className="h-full overflow-hidden">
@@ -28,7 +40,9 @@ const PredictivePanel = ({ predictions }: PredictivePanelProps) => {
             return (
               <div 
                 key={idx} 
-                className="p-3 hover:bg-muted/50 transition-colors border-l-4 border-transparent hover:border-accent"
+                className={`p-3 hover:bg-muted/50 transition-colors border-l-4 cursor-pointer
+                  ${activePredictionId === prediction.id ? 'bg-muted/50 border-accent' : 'border-transparent hover:border-accent'}`}
+                onClick={() => handlePredictionClick(prediction.id)}
               >
                 <div className="flex justify-between items-center">
                   <h4 className="font-medium">{prediction.location}</h4>

@@ -10,10 +10,23 @@ import { AlertTriangle, ExternalLink, Filter } from 'lucide-react';
 interface RecentEarthquakesPanelProps {
   recentEarthquakes: Earthquake[];
   historicalEarthquakes: HistoricalEarthquake[];
+  activeEarthquakeId?: string | null;
+  setActiveEarthquakeId?: (id: string | null) => void;
 }
 
-const RecentEarthquakesPanel = ({ recentEarthquakes, historicalEarthquakes }: RecentEarthquakesPanelProps) => {
+const RecentEarthquakesPanel = ({ 
+  recentEarthquakes, 
+  historicalEarthquakes,
+  activeEarthquakeId,
+  setActiveEarthquakeId
+}: RecentEarthquakesPanelProps) => {
   const [activeTab, setActiveTab] = useState('recent');
+
+  const handleEarthquakeClick = (id: string) => {
+    if (setActiveEarthquakeId) {
+      setActiveEarthquakeId(id);
+    }
+  };
 
   return (
     <Card className="h-full overflow-hidden">
@@ -36,7 +49,8 @@ const RecentEarthquakesPanel = ({ recentEarthquakes, historicalEarthquakes }: Re
               {recentEarthquakes.map(earthquake => (
                 <div 
                   key={earthquake.id} 
-                  className="flex items-start space-x-3 border-b border-muted pb-3 last:border-0"
+                  className={`flex items-start space-x-3 border-b border-muted pb-3 last:border-0 cursor-pointer ${activeEarthquakeId === earthquake.id ? 'bg-muted/50 rounded-md p-2' : 'p-2'}`}
+                  onClick={() => handleEarthquakeClick(earthquake.id)}
                 >
                   <div 
                     className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold"
@@ -67,6 +81,7 @@ const RecentEarthquakesPanel = ({ recentEarthquakes, historicalEarthquakes }: Re
                       target="_blank"
                       rel="noreferrer"
                       className="text-xs text-info flex items-center mt-1 hover:underline"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       Details
                       <ExternalLink className="h-3 w-3 ml-1" />
@@ -84,7 +99,7 @@ const RecentEarthquakesPanel = ({ recentEarthquakes, historicalEarthquakes }: Re
               {historicalEarthquakes.map(earthquake => (
                 <div 
                   key={earthquake.id} 
-                  className="flex items-start space-x-3 border-b border-muted pb-3 last:border-0"
+                  className="flex items-start space-x-3 border-b border-muted pb-3 last:border-0 cursor-pointer p-2"
                 >
                   <div 
                     className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold"
