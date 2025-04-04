@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { Earthquake, EarthquakePrediction, MapLayer, RiskZone } from '../types/earthquake';
 import { getMarkerSize, getMagnitudeColor, getRiskLevelColor } from '../utils/mapUtils';
 import { formatDate } from '../utils/dateUtils';
+import L from 'leaflet';
 
 interface EarthquakeMapProps {
   earthquakes: Earthquake[];
@@ -35,7 +36,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
 
   return (
     <MapContainer 
-      center={mapCenter} 
+      center={mapCenter as L.LatLngExpression} 
       zoom={mapZoom} 
       scrollWheelZoom={true} 
       className="h-full w-full rounded-lg"
@@ -45,15 +46,14 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      <LayersControl position="topright">
+      <LayersControl position="topright" as={LayersControl}>
         {/* Recent Earthquakes Layer */}
         <LayersControl.Overlay checked name="Recent Earthquakes">
           <LayerGroup>
             {earthquakes.map(earthquake => (
               <CircleMarker 
                 key={earthquake.id}
-                center={[earthquake.coordinates[1], earthquake.coordinates[0]]}
-                radius={getMarkerSize(earthquake.magnitude)}
+                center={[earthquake.coordinates[1], earthquake.coordinates[0]] as L.LatLngExpression}
                 pathOptions={{ 
                   fillColor: getMagnitudeColor(earthquake.magnitude),
                   color: getMagnitudeColor(earthquake.magnitude),
@@ -91,8 +91,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                 return (
                   <CircleMarker 
                     key={zone.id}
-                    center={[zone.coordinates[1], zone.coordinates[0]]}
-                    radius={30}
+                    center={[zone.coordinates[1], zone.coordinates[0]] as L.LatLngExpression}
                     pathOptions={{ 
                       fillColor: color,
                       color: color,
@@ -123,8 +122,7 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                 return (
                   <CircleMarker 
                     key={idx}
-                    center={[prediction.coordinates[1], prediction.coordinates[0]]}
-                    radius={25}
+                    center={[prediction.coordinates[1], prediction.coordinates[0]] as L.LatLngExpression}
                     pathOptions={{ 
                       fillColor: color,
                       color: color,
