@@ -18,9 +18,9 @@ const PredictivePanel = ({
 }: PredictivePanelProps) => {
   const sortedPredictions = [...predictions].sort((a, b) => b.probability - a.probability);
 
-  const handlePredictionClick = (id: string) => {
-    if (setActivePredictionId) {
-      setActivePredictionId(id);
+  const handlePredictionClick = (prediction: EarthquakePrediction) => {
+    if (setActivePredictionId && prediction.uniqueId) {
+      setActivePredictionId(prediction.uniqueId);
     }
   };
 
@@ -37,12 +37,14 @@ const PredictivePanel = ({
         <div className="space-y-1 py-2">
           {sortedPredictions.map((prediction, idx) => {
             const { className } = getRiskLevelColor(prediction.riskLevel);
+            const predictionId = prediction.uniqueId || `prediction-${idx}`;
+            
             return (
               <div 
                 key={idx} 
                 className={`p-3 hover:bg-muted/50 transition-colors border-l-4 cursor-pointer
-                  ${activePredictionId === prediction.id ? 'bg-muted/50 border-accent' : 'border-transparent hover:border-accent'}`}
-                onClick={() => handlePredictionClick(prediction.id)}
+                  ${activePredictionId === predictionId ? 'bg-muted/50 border-accent' : 'border-transparent hover:border-accent'}`}
+                onClick={() => handlePredictionClick(prediction)}
               >
                 <div className="flex justify-between items-center">
                   <h4 className="font-medium">{prediction.location}</h4>

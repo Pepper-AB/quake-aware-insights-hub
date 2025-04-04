@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -7,6 +6,7 @@ import RecentEarthquakesPanel from '@/components/RecentEarthquakesPanel';
 import PredictivePanel from '@/components/PredictivePanel';
 import MapControls from '@/components/MapControls';
 import WarningBanner from '@/components/WarningBanner';
+import Footer from '@/components/Footer';
 import { Earthquake, EarthquakePrediction, HistoricalEarthquake, MapLayer, RiskZone } from '@/types/earthquake';
 import { 
   fetchRecentEarthquakes, 
@@ -155,7 +155,7 @@ const Dashboard = () => {
           <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         )}
         
-        <main className={`flex-1 overflow-auto p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
+        <main className={`flex-1 overflow-auto p-4 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'ml-0' : 'ml-0'}`}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Predictive Risk Dashboard</h2>
             <Button 
@@ -178,7 +178,7 @@ const Dashboard = () => {
             </Button>
           </div>
           
-          <div className={`grid gap-4 h-[calc(100vh-150px)] ${showPanels ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'}`}>
+          <div className={`grid gap-4 flex-grow ${showPanels ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'}`}>
             {/* Left Column - Recent Earthquakes */}
             {showPanels && (
               <div className="h-full">
@@ -208,8 +208,6 @@ const Dashboard = () => {
                       predictions={predictions}
                       riskZones={riskZones}
                       enabledLayers={enabledLayers}
-                      activeEarthquakeId={activeEarthquakeId}
-                      activePredictionId={activePredictionId}
                     />
                   )}
                 </CardContent>
@@ -242,6 +240,8 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+      
+      <Footer />
     </div>
   );
 };
