@@ -34,11 +34,14 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
     }
   }, [earthquakes]);
 
+  // Fix 1: Convert the center prop to LatLngTuple for MapContainer
+  const mapPosition: L.LatLngTuple = [mapCenter[0], mapCenter[1]];
+
   return (
     <MapContainer 
-      center={mapCenter}
+      center={mapPosition}
       zoom={mapZoom}
-      scrollWheelZoom
+      scrollWheelZoom={true}
       className="h-full w-full rounded-lg"
     >
       <TileLayer
