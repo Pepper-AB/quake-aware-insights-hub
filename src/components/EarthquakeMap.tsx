@@ -36,9 +36,9 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
 
   return (
     <MapContainer 
-      center={mapCenter} 
-      zoom={mapZoom} 
-      scrollWheelZoom={true} 
+      center={mapCenter}
+      zoom={mapZoom}
+      scrollWheelZoom
       className="h-full w-full rounded-lg"
     >
       <TileLayer
@@ -46,40 +46,43 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      <LayersControl position="topright">
+      <LayersControl>
         {/* Recent Earthquakes Layer */}
         <LayersControl.Overlay checked name="Recent Earthquakes">
           <LayerGroup>
-            {earthquakes.map(earthquake => (
-              <CircleMarker 
-                key={earthquake.id}
-                center={[earthquake.coordinates[1], earthquake.coordinates[0]]}
-                pathOptions={{ 
-                  fillColor: getMagnitudeColor(earthquake.magnitude),
-                  color: getMagnitudeColor(earthquake.magnitude),
-                  fillOpacity: 0.7,
-                  weight: 1
-                }}
-                radius={getMarkerSize(earthquake.magnitude)}
-              >
-                <Popup>
-                  <div className="text-sm">
-                    <h3 className="font-bold">{earthquake.place}</h3>
-                    <p>Magnitude: <span className="font-semibold">{earthquake.magnitude.toFixed(1)}</span></p>
-                    <p>Time: {formatDate(earthquake.time)}</p>
-                    {earthquake.tsunami && <p className="text-red-500 font-bold">Tsunami Alert</p>}
-                    <a 
-                      href={earthquake.url} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="text-blue-500 hover:underline mt-2 inline-block"
-                    >
-                      More details
-                    </a>
-                  </div>
-                </Popup>
-              </CircleMarker>
-            ))}
+            {earthquakes.map(earthquake => {
+              const markerRadius = getMarkerSize(earthquake.magnitude);
+              const markerColor = getMagnitudeColor(earthquake.magnitude);
+              return (
+                <CircleMarker 
+                  key={earthquake.id}
+                  center={[earthquake.coordinates[1], earthquake.coordinates[0]]}
+                  pathOptions={{ 
+                    fillColor: markerColor,
+                    color: markerColor,
+                    fillOpacity: 0.7,
+                    weight: 1
+                  }}
+                >
+                  <Popup>
+                    <div className="text-sm">
+                      <h3 className="font-bold">{earthquake.place}</h3>
+                      <p>Magnitude: <span className="font-semibold">{earthquake.magnitude.toFixed(1)}</span></p>
+                      <p>Time: {formatDate(earthquake.time)}</p>
+                      {earthquake.tsunami && <p className="text-red-500 font-bold">Tsunami Alert</p>}
+                      <a 
+                        href={earthquake.url} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="text-blue-500 hover:underline mt-2 inline-block"
+                      >
+                        More details
+                      </a>
+                    </div>
+                  </Popup>
+                </CircleMarker>
+              );
+            })}
           </LayerGroup>
         </LayersControl.Overlay>
         
@@ -99,7 +102,6 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                       fillOpacity: 0.2,
                       weight: 1
                     }}
-                    radius={30}
                   >
                     <Popup>
                       <div className="text-sm">
@@ -132,7 +134,6 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
                       weight: 2,
                       dashArray: "5, 5"
                     }}
-                    radius={25}
                   >
                     <Popup>
                       <div className="text-sm">
