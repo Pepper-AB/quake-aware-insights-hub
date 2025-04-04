@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				warning: {
+					DEFAULT: '#ecc94b',
+					foreground: '#744210'
+				},
+				danger: {
+					DEFAULT: '#e53e3e',
+					foreground: '#fff'
+				},
+				info: {
+					DEFAULT: '#319795',
+					foreground: '#fff'
 				}
 			},
 			borderRadius: {
@@ -84,11 +97,38 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-slow': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.5'
+					}
+				},
+				'pulse-warning': {
+					'0%, 100%': {
+						boxShadow: '0 0 0 0 rgba(236, 201, 75, 0.4)'
+					},
+					'50%': {
+						boxShadow: '0 0 0 10px rgba(236, 201, 75, 0)'
+					}
+				},
+				'pulse-danger': {
+					'0%, 100%': {
+						boxShadow: '0 0 0 0 rgba(229, 62, 62, 0.4)'
+					},
+					'50%': {
+						boxShadow: '0 0 0 10px rgba(229, 62, 62, 0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'pulse-warning': 'pulse-warning 2s infinite',
+				'pulse-danger': 'pulse-danger 1.5s infinite'
 			}
 		}
 	},
