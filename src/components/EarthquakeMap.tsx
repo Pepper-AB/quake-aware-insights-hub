@@ -5,7 +5,6 @@ import 'leaflet/dist/leaflet.css';
 import { Earthquake, EarthquakePrediction, MapLayer, RiskZone } from '../types/earthquake';
 import { getMarkerSize, getMagnitudeColor, getRiskLevelColor } from '../utils/mapUtils';
 import { formatDate } from '../utils/dateUtils';
-import L from 'leaflet';
 
 interface EarthquakeMapProps {
   earthquakes: Earthquake[];
@@ -34,12 +33,9 @@ const EarthquakeMap = ({ earthquakes, predictions, riskZones, enabledLayers }: E
     }
   }, [earthquakes]);
 
-  // Fix 1: Convert the center prop to LatLngTuple for MapContainer
-  const mapPosition: L.LatLngTuple = [mapCenter[0], mapCenter[1]];
-
   return (
     <MapContainer 
-      center={mapPosition}
+      center={mapCenter}
       zoom={mapZoom}
       scrollWheelZoom={true}
       className="h-full w-full rounded-lg"

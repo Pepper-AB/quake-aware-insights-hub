@@ -34,9 +34,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   return (
     <aside 
       className={cn(
-        "fixed left-0 top-0 z-40 h-full w-64 bg-sidebar text-sidebar-foreground transition-transform duration-300 ease-in-out transform",
-        isOpen ? "translate-x-0" : "-translate-x-full",
-        "md:relative md:translate-x-0"
+        "fixed left-0 top-0 z-40 h-full w-64 bg-sidebar text-sidebar-foreground transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
@@ -48,7 +47,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
           variant="ghost" 
           size="icon" 
           onClick={toggleSidebar}
-          className="md:hidden hover:bg-sidebar-accent/50"
+          className="hover:bg-sidebar-accent/50"
         >
           <X className="h-5 w-5" />
         </Button>

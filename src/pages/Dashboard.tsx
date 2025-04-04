@@ -15,11 +15,13 @@ import {
   fetchRiskZones
 } from '@/services/earthquakeService';
 import { Card, CardContent } from '@/components/ui/card';
-import { Info } from 'lucide-react';
+import { Info, ArrowRightFromLine, ArrowLeftFromLine } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showPanels, setShowPanels] = useState(false);
   const [recentEarthquakes, setRecentEarthquakes] = useState<Earthquake[]>([]);
   const [predictions, setPredictions] = useState<EarthquakePrediction[]>([]);
   const [historicalEarthquakes, setHistoricalEarthquakes] = useState<HistoricalEarthquake[]>([]);
@@ -32,6 +34,7 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const togglePanels = () => setShowPanels(!showPanels);
   
   const toggleLayer = (layer: MapLayer) => {
     setEnabledLayers(prev => 
@@ -113,22 +116,46 @@ const Dashboard = () => {
       <Header toggleSidebar={toggleSidebar} />
       
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        {isSidebarOpen && (
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        )}
         
         <main className="flex-1 overflow-auto p-4">
-          <h2 className="text-2xl font-bold mb-4">Predictive Risk Dashboard</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Predictive Risk Dashboard</h2>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={togglePanels}
+              className="flex items-center gap-2"
+            >
+              {showPanels ? (
+                <>
+                  <ArrowLeftFromLine className="h-4 w-4" />
+                  Hide Panels
+                </>
+              ) : (
+                <>
+                  <ArrowRightFromLine className="h-4 w-4" />
+                  Show Panels
+                </>
+              )}
+            </Button>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-150px)]">
+          <div className={`grid gap-4 h-[calc(100vh-150px)] ${showPanels ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'}`}>
             {/* Left Column - Recent Earthquakes */}
-            <div className="h-full">
-              <RecentEarthquakesPanel 
-                recentEarthquakes={recentEarthquakes}
-                historicalEarthquakes={historicalEarthquakes}
-              />
-            </div>
+            {showPanels && (
+              <div className="h-full">
+                <RecentEarthquakesPanel 
+                  recentEarthquakes={recentEarthquakes}
+                  historicalEarthquakes={historicalEarthquakes}
+                />
+              </div>
+            )}
             
-            {/* Center Column - Map and Controls */}
-            <div className="h-full md:col-span-1 lg:col-span-1 flex flex-col space-y-4">
+            {/* Center/Main Column - Map and Controls */}
+            <div className={`h-full flex flex-col space-y-4 ${showPanels ? 'md:col-span-1 lg:col-span-1' : 'col-span-1'}`}>
               <Card className="flex-1">
                 <CardContent className="p-3 h-full">
                   {isLoading ? (
@@ -156,9 +183,11 @@ const Dashboard = () => {
             </div>
             
             {/* Right Column - Predictions */}
-            <div className="h-full">
-              <PredictivePanel predictions={predictions} />
-            </div>
+            {showPanels && (
+              <div className="h-full">
+                <PredictivePanel predictions={predictions} />
+              </div>
+            )}
           </div>
           
           <div className="mt-4 text-xs text-muted-foreground flex items-center">
